@@ -1,0 +1,29 @@
+{
+  "name": "hexo-bloogle-sitemap",
+  "version": "1.0.0",
+  "description": "a bloogle.io sitemap generator for hexo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/letsblogio/hexo-bloogle-sitemap.git"
+  },
+  "keywords": [
+    "bloogle",
+    "hexo",
+    "sitemap"
+  ],
+  "author": "cmlanche",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/letsblogio/hexo-bloogle-sitemap/issues"
+  },
+  "homepage": "https://github.com/letsblogio/hexo-bloogle-sitemap#readme",
+  "dependencies": {
+    "hexo-log": "^0.2.0",
+    "hexo-util": "^0.6.3",
+    "js-md5": "^0.7.3"
+  }
+}
