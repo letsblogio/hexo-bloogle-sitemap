@@ -1,6 +1,6 @@
 {
   "name": "hexo-bloogle-sitemap",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "a bloogle.io sitemap generator for hexo",
   "main": "index.js",
   "scripts": {

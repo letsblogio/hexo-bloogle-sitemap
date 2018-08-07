@@ -18,13 +18,18 @@ const catags = item => {
 /**
  * hexo配置文件
  */
-let cfg = hexo.config.jsonContent || { meta: true };
+let cfg = hexo.config.jsonContent || { meta: true, key: "" };
 let ignore = [];
+
+/**
+ * raw data
+ */
+let results = [];
 
 /**
  * 页面属性
  */
-let letsblog_pages = {
+let bloogle_pages = {
     id: true,
     title: true,
     raw: true,
@@ -37,15 +42,15 @@ let letsblog_pages = {
 /**
  * 文章属性
  */
-let letsblog_posts = {
-    id: true,
-    raw: true,
-    title: true,
-    createdDate: true,
-    updatedDate: true,
-    path: true,
-    link: true,
-    permalink: true,
+let bloogle_posts = {
+    id: true,           // 文章id
+    rawpath: true,      // 原文件路径
+    title: true,        // 文章标题
+    createdDate: true,  // 创建时间
+    updatedDate: true,  // 更新时间
+    path: true,         // 文章路径
+    link: true,         // 
+    permalink: true,    // 固定路径
     excerpt: true,
     categories: true,
     tags: true
@@ -57,15 +62,20 @@ let letsblog_posts = {
 setContent = (obj, item, ref) => {
     switch (item) {
         case "id":
-            let _date = "letsblog_" + ref.date;
+            let _date = "bloogle_" + ref.date;
             log.info(_date)
             obj.id = md5(_date);
             break
         case "title":
             obj.title = ref.title;
             break
-        case "raw":
-            obj.raw = ref.raw;
+        case "rawpath":
+            obj.rawpath = "raw/" + md5("bloogle_" + ref.date) + ".json";
+            log.info(obj.rawpath)
+            results.push({
+                "path": obj.rawpath,
+                "data": ref.raw
+            })
             break
         case "categories":
             obj.categories = ref.categories.map(catags);
@@ -89,17 +99,9 @@ setContent = (obj, item, ref) => {
 /**
  * 注册插件
  */
-hexo.extend.generator.register('letsblog-sitemap', site => {   
+hexo.extend.generator.register('bloogle', site => {
     // // if there have any pages
-    let pageProps = getProps(letsblog_pages);
-    log.info(site.pages);
-    let pagesFiltered = site.pages.filter(page=>{
-        let path = page.path.toLowerCase();
-        return !ignore.find(item => path.includes(item));
-    });
-    let pagesContent = pagesFiltered.map(page => pageProps.reduce((obj, item) => setContent(obj, item, page), {}));
-
-    let postProps = getProps(letsblog_posts);
+    let postProps = getProps(bloogle_posts);
     let postsFiltered = site.posts.sort('-date').filter(post => {
         let path = post.path.toLowerCase()
         return post.published && !ignore.find(item => path.includes(item))
@@ -108,13 +110,13 @@ hexo.extend.generator.register('letsblog-sitemap', site => {
         return setContent(obj, item, post);
     }, {}))
 
-    log.info("hello world");
-
-    return {
+    results.push({
         path: 'bloogle.json',
         data: JSON.stringify({
             description: "bloogle sitemap",
             type: "hexo",
+            key: cfg.apikey,
+            contentType: "markdown",
             meta: {
                 title: hexo.config.title,
                 subtitle: hexo.config.subtitle,
@@ -123,8 +125,9 @@ hexo.extend.generator.register('letsblog-sitemap', site => {
                 url: hexo.config.url,
                 root: hexo.config.root
             },
-            pages: pagesContent,
             posts: postsContent,
         })
-    }
+    });
+
+    return results;
 });
