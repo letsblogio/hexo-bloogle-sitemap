@@ -113,6 +113,8 @@ hexo.extend.generator.register('bloogle', site => {
     results.push({
         path: 'bloogle.json',
         data: JSON.stringify({
+            versioncode: 1,
+            version: "1.0",
             description: "bloogle sitemap",
             type: "hexo",
             key: cfg.apikey,
